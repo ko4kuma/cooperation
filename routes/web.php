@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('get-student/{name}/{code}', function ($name, $code) {
+    echo "Nama Saya " . $name . " NRP " . $code;
+});
