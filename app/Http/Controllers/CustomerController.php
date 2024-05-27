@@ -3,27 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Customer;
 
 //use berarti mengimport
 
 class CustomerController extends Controller
 {
-    public function index()
-    {
-        echo "Indeks halaman";
+    // untuk menambah datasss customer
+    public function create() {
+        return view('customers.create');
     }
-    public function getName()
-    {
-        echo "Fajriyyah";
-    }
-    public function getCity($city)
-    {
-        echo "Kota saya di " . $city;
-    }
-    public function getStudent($name, $code)
-    {
-        echo "Nama Saya " . $name . " NRP " . $code;
-    }
+    public function store(Request $request) {
+        $this->validate($request, [
+            'code' => 'required|unique:customers|max:4',
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required|numeric'
+        ]);
+        $customer = new Customer;
+        // mengakses properti
+        $customer->code = $request->code;
+        $customer->name = $request->name;
+        $customer->address = $request->address;
+        $customer->phone = $request->phone;
 
-    //
+        // insert ke database
+        $customer->save();
+
+    }
 }
