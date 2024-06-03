@@ -28,7 +28,28 @@ class CustomerController extends Controller
         $customer->phone = $request->phone;
 
         // insert ke database
-        $customer->save();
+        // insert into customers values ('name', 'address')
+        // true/false
+        // return true
+        if($customer->save()) {
+            // return redirect()->route('customer.show', ['parameterKey' => 'value']);
+            return redirect()->route('customer.show', $customer->id);
 
+        } else {
+            dd('Data gagal disimpan');
+        }
+
+    }
+    public function show($id) {
+        // select * from customers where id = x
+        $customer = Customer::find($id);
+        return view('customers.show', compact('customer'));
+        // dd($customer);
+
+    }
+    public function index() {
+        // select * from customers
+        $customers = Customer::all();
+        return view('customers.index', compact('customers'));
     }
 }
