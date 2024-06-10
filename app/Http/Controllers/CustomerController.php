@@ -48,8 +48,58 @@ class CustomerController extends Controller
 
     }
     public function index() {
-        // select * from customers
+    // select * from customers
         $customers = Customer::all();
         return view('customers.index', compact('customers'));
     }
+        
+    // method untuk mengambil data yg diubah
+    public function edit($id) {
+        $customer = Customer::find($id);
+        return view('customers.edit', compact('customer'));
+
+        
+    }
+    // method untuk menyimpan data yg diubah
+    public function update(Request $request) {
+        $this->validate($request, [
+            'name' => 'required',
+            'address' => 'required',
+            'phone' => 'required|numeric'
+        ]);
+
+        // update customers set name='', phone='', address='' where id=''
+        $customer = Customer::find($request->id);
+        
+        // mengakses properti
+        $customer->name = $request->name;
+        $customer->address = $request->address;
+        $customer->phone = $request->phone;
+
+        // insert ke database
+        // insert into customers values ('name', 'address')
+        // true/false
+        // return true
+        if($customer->save()) {
+            // return redirect()->route('customer.show', ['parameterKey' => 'value']);
+            return redirect()->route('customer.index')->with('success', "Data Nasabah $customer->code Berhasil diperbaharui");
+
+        } else {
+            dd('Data gagal disimpan');
+        }
+
+    }
+    // method untuk hapus data
+    public function destroy($id) {
+
+        $customer = Customer::find($id);
+        $name = $customer->name;
+        if($customer->delete()) {
+            return redirect()->route('customer.index')->with('success', "Data Nasabah $name Berhasil dihapus");
+
+        } else {
+            dd("Data gagal dihapus");
+        }
+    }
+
 }
